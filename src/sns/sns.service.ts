@@ -1,8 +1,8 @@
-import { ConfigurationOptions } from "aws-sdk/lib/config";
 import { HttpException, HttpStatus, Inject, Injectable } from "@nestjs/common";
 import { PublishInput, PublishResponse } from "aws-sdk/clients/sns";
 import { SNS } from "aws-sdk";
 
+import { AwsConfigurationOptions } from "./sns.interface";
 import { CONFIG_CONNECTION_OPTIONS } from "./sns.constant";
 
 /**
@@ -10,9 +10,9 @@ import { CONFIG_CONNECTION_OPTIONS } from "./sns.constant";
  * @class AwsSnsService
  */
 @Injectable()
-export class AwsSnsService {
+export class SnsService {
   private readonly _sns: SNS;
-  constructor(@Inject(CONFIG_CONNECTION_OPTIONS) private _options: ConfigurationOptions) {
+  constructor(@Inject(CONFIG_CONNECTION_OPTIONS) private _options: AwsConfigurationOptions) {
     this._sns = new SNS(this._options);
   }
 
@@ -25,7 +25,6 @@ export class AwsSnsService {
         return [
           {
             statusCode: HttpStatus.OK,
-            message: "Sms sent",
             data: info,
           },
         ];
@@ -34,7 +33,6 @@ export class AwsSnsService {
         throw new HttpException(
           {
             statusCode: HttpStatus.BAD_REQUEST,
-            message: "Failed to send",
             data: err,
           },
           HttpStatus.BAD_REQUEST,

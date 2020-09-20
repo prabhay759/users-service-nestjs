@@ -72,3 +72,10 @@ Swagger documentation can be found at:
 ```bash
 http://localhost/swagger/
 ```
+
+## TODO
+
+1. Rate limit
+2. Pagination on list users
+3. API timeout
+4. Password hashing (It can be done using chkpass extension)
