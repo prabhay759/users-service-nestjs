@@ -29,6 +29,15 @@ To run the application locally. Start the local database server and then run the
 ```bash
 # development
 $ npm run start
+
+# create a local db
+$ npm run start:local:db
+
+# watch mode
+$ npm run start:dev
+
+# production mode
+$ npm run start:prod
 ```
 
 ## Test
@@ -36,5 +45,11 @@ $ npm run start
 ```bash
 # unit tests
 $ npm run test
+
+# e2e tests
+$ npm run test:e2e
+
+# test coverage
+$ npm run test:cov
 
 ```
