@@ -4,4 +4,4 @@ A user service small service written in Node using nest JS framework
 
 # Line Diagram
 
-![Line Diagram](https://drive.google.com/file/d/1ph9WVn4oua4mwa7ieboPicaE0_l4i5Lk/view?usp=sharing)
+![image](https://drive.google.com/uc?export=view&id=1bP-JinQPrELglUg-knrR6QTrvsU8S7-3)
