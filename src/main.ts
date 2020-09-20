@@ -1,4 +1,5 @@
 import { AppModule } from "./app.module";
+import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger";
 import { Logger } from "nestjs-pino";
 import { NestFactory } from "@nestjs/core";
 import { PinoLogger } from "nestjs-pino";
@@ -26,6 +27,15 @@ async function bootstrap() {
       // connected database).
       app.close();
     });
+
+  const options = new DocumentBuilder()
+    .setTitle("Users Service")
+    .setDescription("Users Service")
+    .setVersion("1.0")
+    .build();
+
+  const document = SwaggerModule.createDocument(app, options);
+  SwaggerModule.setup("swagger", app, document);
 
   await app.listen(process.env.APP_PORT || 80);
 }

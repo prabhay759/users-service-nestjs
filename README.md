@@ -53,3 +53,22 @@ $ npm run test:e2e
 $ npm run test:cov
 
 ```
+
+## API documentation
+
+### Compdoc
+
+It uses [Compodoc](https://compodoc.app/guides/getting-started.html) to generate the static documents.
+On start of the service Static documents will be served. It can be accessed on the browser on the root path.
+
+```bash
+http://localhost
+```
+
+### Swagger
+
+Swagger documentation can be found at:
+
+```bash
+http://localhost/swagger/
+```
