@@ -61,11 +61,6 @@ export class User extends Address {
 export class UsersCreate extends Address {
   @Allow()
   @ApiProperty()
-  @IsString()
-  id: string;
-
-  @Allow()
-  @ApiProperty()
   @IsEmail()
   email: string;
 
@@ -86,23 +81,99 @@ export class UsersCreate extends Address {
   }
 }
 
-export class UsersUpdate extends Address {
+export class UsersUpdate {
   @Allow()
   @IsEmail()
+  @ApiProperty({
+    example: "abc@test.com",
+  })
   email?: string;
 
   @Allow()
   @IsOptional()
   @IsString()
+  @ApiProperty({
+    example: "hashpassword",
+  })
   password?: string;
 
   @Allow()
   @IsOptional()
   @IsString()
+  @ApiProperty({
+    example: "Prabhay",
+  })
   first_name?: string;
+
+  @Allow()
+  @ApiProperty({
+    example: "Haupstrasse 46",
+  })
+  addressLine1?: string;
+
+  @Allow()
+  @ApiPropertyOptional({
+    example: "Apartmen No 5",
+  })
+  addressLine2?: string;
+
+  @Allow()
+  @ApiProperty({
+    example: "6020",
+  })
+  postCode?: string;
+
+  @Allow()
+  @ApiProperty({
+    example: "Luzern",
+  })
+  city?: string;
+
+  @Allow()
+  @ApiProperty({
+    example: "switzerland",
+  })
+  country?: string;
 
   static of(data: UsersUpdate): UsersUpdate {
     const result = new UsersUpdate();
+    Object.assign(result, data);
+    return result;
+  }
+}
+
+export class UsersReplace extends UsersCreate {
+  @Allow()
+  @ApiProperty()
+  @IsString()
+  id: string;
+
+  static ofReplace(data: UsersUpdate): UsersUpdate {
+    const result = new UsersUpdate();
+    Object.assign(result, data);
+    return result;
+  }
+}
+
+export class UsersSearch {
+  @IsOptional()
+  @IsEmail()
+  @ApiProperty({
+    example: "Prabhay@gmail.com",
+    required: false,
+  })
+  email?: string;
+
+  @IsOptional()
+  @IsString()
+  @ApiProperty({
+    example: "Prabhay",
+    required: false,
+  })
+  first_name?: string;
+
+  static of(data: UsersSearch): UsersSearch {
+    const result = new UsersSearch();
     Object.assign(result, data);
     return result;
   }

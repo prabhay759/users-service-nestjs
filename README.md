@@ -73,9 +73,11 @@ Swagger documentation can be found at:
 http://localhost/swagger/
 ```
 
-## TODO
+## TODO's
 
 1. Rate limit
-2. Pagination on list users
+2. Pagination on Get users
 3. API timeout
 4. Password hashing (It can be done using chkpass extension)
+5. Cache results
+6. Allow search for more than one email or first_name.
