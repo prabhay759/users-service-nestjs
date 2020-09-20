@@ -1,8 +1,8 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable } from "@nestjs/common";
 
-import * as AWS from 'aws-sdk';
-import { SQS_CLIENT } from './sqs.constants';
-import { SqsClient, SqsClientError } from './sqs.client';
+import * as AWS from "aws-sdk";
+import { SQS_CLIENT } from "./config";
+import { SqsClient, SqsClientError } from "./sqs.client";
 
 @Injectable()
 export class SqsService {

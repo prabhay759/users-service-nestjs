@@ -1,10 +1,10 @@
-import * as AWS from 'aws-sdk';
+import * as AWS from "aws-sdk";
 
-import { SQS_CLIENT, SQS_MODULE_OPTIONS } from './sqs.constants';
+import { SQS_CLIENT, SQS_MODULE_OPTIONS } from "./config";
 
-import { Provider } from '@nestjs/common';
-import { SQSModuleOptions } from './sqs.interface';
-import { v4 } from 'uuid';
+import { Provider } from "@nestjs/common";
+import { SQSModuleOptions } from "./sqs.interface";
+import { v4 } from "uuid";
 
 export interface SqsClient {
   defaultKey: string;
@@ -15,9 +15,7 @@ export interface SqsClient {
 export class SqsClientError extends Error {}
 export const createClient = (): Provider => ({
   provide: SQS_CLIENT,
-  useFactory: async (
-    options: SQSModuleOptions | SQSModuleOptions[],
-  ): Promise<SqsClient> => {
+  useFactory: async (options: SQSModuleOptions | SQSModuleOptions[]): Promise<SqsClient> => {
     const clients = new Map<string, AWS.SQS>();
     let defaultKey = v4();
 
@@ -26,7 +24,7 @@ export const createClient = (): Provider => ({
         options.map(async o => {
           const key = o.name || defaultKey;
           if (clients.has(key)) {
-            throw new SqsClientError(`${o.name || 'default'} client is exists`);
+            throw new SqsClientError(`${o.name || "default"} client is exists`);
           }
           clients.set(key, await getClient(o));
         }),
