@@ -16,7 +16,7 @@ services:
       context: .
     depends_on:
       - db
-      - queue
+      - sns
     environment:
       POSTGRES_USER: docker
       POSTGRES_PASSWORD: docker
@@ -26,6 +26,8 @@ services:
       APP_PORT: 80
       SQS_HOST: sqs
       SQS_PORT: 9324
+      SNS_HOST: sns
+      SNS_PORT: 9911
     ports:
       - 80:80
   db:
@@ -44,3 +46,13 @@ services:
       - 9324:9324
     stdin_open: true
     tty: true
+
+  sns: # AWS simple notification service
+    image: s12v/sns
+    container_name: sns-mock
+    ports:
+      - "9911:9911"
+    volumes:
+      - ./config/sns.json:/etc/sns/db.json
+    depends_on:
+      - sqs
