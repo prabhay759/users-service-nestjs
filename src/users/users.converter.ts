@@ -1,7 +1,7 @@
 import * as _ from "lodash";
 import { Ids } from "../common/ids.generator";
 import { Injectable } from "@nestjs/common";
-import { User, UsersCreate } from "./api/users.interface";
+import { User, UsersCreate, UsersUpdate } from "./api/users.interface";
 import { UsersEntity } from "./model/users.entity";
 
 @Injectable()
@@ -23,6 +23,38 @@ export class UsersConverter {
   createToDomain(dto: UsersCreate): UsersEntity {
     return UsersEntity.of({
       id: Ids.genUuid(),
+      email: dto.email,
+      first_name: dto.first_name,
+      password: dto.password,
+      address: {
+        addressLine1: dto.addressLine1,
+        addressLine2: dto.addressLine2 || "",
+        city: dto.city,
+        country: dto.country,
+        postCode: dto.postCode,
+      },
+    });
+  }
+
+  updateToDomain(userId: string, dto: UsersUpdate): UsersEntity {
+    return UsersEntity.of({
+      id: userId,
+      email: dto.email || "",
+      first_name: dto.first_name || "",
+      password: dto.password || "",
+      address: {
+        addressLine1: dto.addressLine1 || "",
+        addressLine2: dto.addressLine2 || "",
+        city: dto.city || "",
+        country: dto.country || "",
+        postCode: dto.postCode || "",
+      },
+    });
+  }
+
+  replaceToDomain(userId: string, dto: UsersUpdate): UsersEntity {
+    return UsersEntity.of({
+      id: userId,
       email: dto.email,
       first_name: dto.first_name,
       password: dto.password,

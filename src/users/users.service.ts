@@ -1,12 +1,11 @@
 import { EntityManager } from "typeorm";
-import { Injectable, NotFoundException } from "@nestjs/common";
+import { Injectable } from "@nestjs/common";
 import { SnsService } from "src/sns/sns.service";
 import { Transactional } from "../database/transactional";
-import { User, UsersCreate, UsersUpdate } from "./api/users.interface";
+import { User, UsersCreate, UsersReplace, UsersSearch, UsersUpdate } from "./api/users.interface";
 import { UsersConverter } from "./users.converter";
 import { UsersEntity } from "./model/users.entity";
 import { UsersRepository } from "./users.repository";
-import { verify } from "../common/verify/verifier";
 
 @Injectable()
 export class UsersService {
@@ -32,5 +31,28 @@ export class UsersService {
 
   async remove(id: string, transactionEntityManager?: EntityManager): Promise<boolean> {
     return await this.usersRepository.delete(id, transactionEntityManager);
+  }
+
+  async update(userId: string, dto: UsersUpdate, transactionEntityManager?: EntityManager): Promise<User> {
+    return this.transactional.with(transactionEntityManager, async manager => {
+      const userEntity: UsersEntity = this.usersConverter.updateToDomain(userId, dto);
+      const updated = await this.usersRepository.patch(userEntity, manager);
+      if (!updated) {
+        return;
+      }
+      return this.usersConverter.toDto(updated);
+    });
+  }
+
+  async replace(userId: string, dto: UsersReplace, transactionEntityManager?: EntityManager): Promise<void> {
+    return this.transactional.with(transactionEntityManager, async manager => {
+      const userEntity: UsersEntity = this.usersConverter.replaceToDomain(userId, dto);
+      await this.usersRepository.put(userEntity, manager);
+    });
+  }
+
+  async search(search: UsersSearch, transactionEntityManager?: EntityManager): Promise<User[]> {
+    const entities = await this.usersRepository.search(search, transactionEntityManager);
+    return entities.map(e => this.usersConverter.toDto(e));
   }
 }

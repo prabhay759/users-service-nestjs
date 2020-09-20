@@ -8,6 +8,7 @@ import {
   ApiTags,
 } from "@nestjs/swagger";
 import {
+  BadRequestException,
   Body,
   Controller,
   Delete,
@@ -17,17 +18,16 @@ import {
   Injectable,
   NotFoundException,
   Param,
-  ParseArrayPipe,
   Patch,
   Post,
+  Put,
   Query,
 } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { Response } from "../common/interfaces/response.interface";
-import { User, UsersCreate, UsersUpdate } from "./api/users.interface";
+import { User, UsersCreate, UsersReplace, UsersSearch, UsersUpdate } from "./api/users.interface";
 import { UsersService } from "./users.service";
 import { arrayResponseSchema, responseSchema } from "src/common/swagger/schema.helper";
-import { verify } from "../common/verify/verifier";
 
 @Injectable()
 @Controller("users")
@@ -78,5 +78,51 @@ export class UsersController {
   async create(@Body() dto: UsersCreate): Promise<Response<User>> {
     const created = await this.usersService.create(dto);
     return Response.forData(created);
+  }
+
+  @Patch(":id")
+  @ApiOperation({
+    summary: "Updates a user",
+  })
+  @HttpCode(HttpStatus.OK)
+  @ApiOkResponse({ description: "User Updated", schema: responseSchema(Response, "data", User) })
+  @ApiNotFoundResponse({ description: "Not Found" })
+  @ApiBadRequestResponse({ description: "User update failed. An error message will be returned" })
+  async update(@Param("id") id: string, @Body() dto: UsersUpdate): Promise<Response<User>> {
+    const updated = await this.usersService.update(id, dto);
+    if (!updated) {
+      throw new NotFoundException("user not found");
+    }
+    return Response.forData(updated);
+  }
+
+  @Put(":id")
+  @ApiOperation({
+    summary: "Create or replace a user",
+  })
+  @HttpCode(HttpStatus.NO_CONTENT)
+  @ApiOkResponse({ description: "User Updated" })
+  @ApiNotFoundResponse({ description: "Not Found" })
+  @ApiBadRequestResponse({ description: "User update failed. An error message will be returned" })
+  async replace(@Param("id") id: string, @Body() dto: UsersReplace): Promise<void> {
+    if (id != dto.id) {
+      throw new BadRequestException("User id does not match with request id");
+    }
+    await this.usersService.update(id, dto);
+  }
+
+  @Get()
+  @ApiOperation({
+    summary: "Search users by their fields: first_name, email",
+  })
+  @HttpCode(HttpStatus.OK)
+  @ApiOkResponse({ description: "Search results returned", schema: arrayResponseSchema(Response, "data", User) })
+  @ApiBadRequestResponse({ description: "Users search failed. An error message will be returned" })
+  async search(
+    @Query()
+    query: UsersSearch,
+  ): Promise<Response<User[]>> {
+    const found = await this.usersService.search(query);
+    return Response.forData(found);
   }
 }
