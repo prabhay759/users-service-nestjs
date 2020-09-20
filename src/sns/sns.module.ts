@@ -1,8 +1,8 @@
 import { DynamicModule, Module } from "@nestjs/common";
 
-import { AwsSnsService } from "./sns.service";
 import { CONFIG_CONNECTION_OPTIONS } from "./sns.constant";
 import { ISNSModuleAsyncOptions } from "./sns.interface";
+import { SnsService } from "./sns.service";
 
 /**
  * @export
@@ -19,9 +19,9 @@ export class SnsModule {
           useFactory: options.useFactory,
           inject: options.inject || [],
         },
-        AwsSnsService,
+        SnsService,
       ],
-      exports: [AwsSnsService],
+      exports: [SnsService],
     };
   }
 }
