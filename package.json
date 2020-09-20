@@ -35,6 +35,7 @@
     "@nestjs/swagger": "^4.6.0",
     "@nestjs/terminus": "^7.0.1",
     "@nestjs/typeorm": "^7.1.4",
+    "aws-sdk": "^2.756.0",
     "bintrees": "^1.0.2",
     "class-transformer": "^0.2.3",
     "class-validator": "^0.12.2",
