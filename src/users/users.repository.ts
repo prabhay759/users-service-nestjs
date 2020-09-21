@@ -44,11 +44,7 @@ export class UsersRepository {
       if (!existingEntity) {
         return;
       }
-      domain.address.addressLine1 = domain.address.addressLine1 || existingEntity.address.addressLine1;
-      domain.address.addressLine2 = domain.address.addressLine2 || existingEntity.address.addressLine2;
-      domain.address.city = domain.address.city || existingEntity.address.city;
-      domain.address.country = domain.address.country || existingEntity.address.country;
-      domain.address.postCode = domain.address.postCode || existingEntity.address.postCode;
+      domain.address = { ...existingEntity.address };
       domain.first_name = domain.first_name || existingEntity.first_name;
       domain.password = domain.password || existingEntity.password;
       domain.email = domain.email || existingEntity.email;
@@ -65,7 +61,12 @@ export class UsersRepository {
       if (!existingEntity) {
         return this.create(domain, manager);
       }
-      await usersRepo.update(domain.id, domain);
+      const id = domain.id;
+      if (existingEntity.email == domain.email) {
+        delete domain.email;
+      }
+      delete domain.id;
+      await usersRepo.update(id, domain);
     });
   }
 

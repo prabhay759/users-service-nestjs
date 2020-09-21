@@ -28,6 +28,7 @@ import { Response } from "../common/interfaces/response.interface";
 import { User, UsersCreate, UsersReplace, UsersSearch, UsersUpdate } from "./api/users.interface";
 import { UsersService } from "./users.service";
 import { arrayResponseSchema, responseSchema } from "src/common/swagger/schema.helper";
+import { IpAddress } from "src/common/decorator/ip.decorator";
 
 @Injectable()
 @Controller("users")
@@ -75,8 +76,8 @@ export class UsersController {
     schema: responseSchema(Response, "data", User),
   })
   @ApiBadRequestResponse({ description: "User creation failed. An error message will be returned" })
-  async create(@Body() dto: UsersCreate): Promise<Response<User>> {
-    const created = await this.usersService.create(dto);
+  async create(@Body() dto: UsersCreate, @IpAddress() ip: string): Promise<Response<User>> {
+    const created = await this.usersService.create(dto, ip);
     return Response.forData(created);
   }
 
@@ -104,11 +105,12 @@ export class UsersController {
   @ApiOkResponse({ description: "User Updated" })
   @ApiNotFoundResponse({ description: "Not Found" })
   @ApiBadRequestResponse({ description: "User update failed. An error message will be returned" })
-  async replace(@Param("id") id: string, @Body() dto: UsersReplace): Promise<void> {
+  async replace(@Param("id") id: string, @Body() dto: UsersReplace, @IpAddress() ip: string): Promise<void> {
     if (id != dto.id) {
       throw new BadRequestException("User id does not match with request id");
     }
-    await this.usersService.update(id, dto);
+
+    await this.usersService.replace(id, ip, dto);
   }
 
   @Get()

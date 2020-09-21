@@ -15,4 +15,5 @@ export class AwsConfigurationOptions {
   secretAccessKey?: string;
   maxRetries?: number;
   region?: string;
+  endPoint: string;
 }

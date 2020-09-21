@@ -26,8 +26,8 @@ services:
       APP_PORT: 80
       SQS_HOST: sqs
       SQS_PORT: 9324
-      SNS_HOST: sns
-      SNS_PORT: 9911
+      SNS_HOST: sns-proxy:8443
+      SNS_TOPIC: "arn:aws:sns:eu-west-2:123450000001:user_record_updated"
     ports:
       - 80:80
   db:
@@ -49,10 +49,20 @@ services:
 
   sns: # AWS simple notification service
     image: s12v/sns
-    container_name: sns-mock
+    container_name: sns
     ports:
       - "9911:9911"
     volumes:
       - ./config/sns.json:/etc/sns/db.json
     depends_on:
       - sqs
+
+  sns-proxy:
+    image: nginx:latest
+    container_name: sns-proxy
+    ports:
+      - "8443:443"
+    volumes:
+      - ./config/ssl_proxy:/etc/nginx/conf.d
+    depends_on:
+      - sns

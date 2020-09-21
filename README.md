@@ -24,6 +24,12 @@ $ npm install
 
 ## Running the app
 
+### Note
+
+While running locally, IP address will be detected as `::1` which is reserved IP and we might not get the geolocation.
+To work around, we can pass `X-Client-IP` header to use this IP for geolocation details.
+ex: `X-Client-IP: 31.10.147.174`
+
 To run the application locally. Start the local database server and then run the applications.
 
 ```bash
@@ -38,6 +44,22 @@ $ npm run start:dev
 
 # production mode
 $ npm run start:prod
+```
+
+### Running via Docker-compose
+
+```bash
+# to run in the foreground
+$ docker-compose up
+
+# to run in the background and
+$ docker-compose up -d
+
+# tail the logs
+$ docker-compose logs -f
+
+# subsequent builds for any changes in dockerfile.
+$ docker-compose build
 ```
 
 ## Test
@@ -80,4 +102,7 @@ http://localhost/swagger/
 3. API timeout
 4. Password hashing (It can be done using chkpass extension)
 5. Cache results
-6. Allow search for more than one email or first_name.
+6. Allow search for more than one email or first_name
+7. Tests
+
+Note: Having some trouble in fixing docker SNS due to certificate isssue, hence that code is commented. But having real AWS SNS, it shall work with ease.

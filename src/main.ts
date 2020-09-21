@@ -1,3 +1,4 @@
+import * as requestIp from "request-ip";
 import { AppModule } from "./app.module";
 import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger";
 import { Logger } from "nestjs-pino";
@@ -12,6 +13,7 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule, { logger: new Logger(appLogger, { renameContext: "app-init" }) });
   const logger = app.get(Logger);
   app.useLogger(logger);
+  app.use(requestIp.mw());
   applyMiddleware(app);
 
   // The service will start and will be available for livecheck. Migration will scripts continue to run

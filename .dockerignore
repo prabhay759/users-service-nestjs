@@ -1,0 +1,18 @@
+# compiled output
+/dist
+/node_modules
+
+# tests
+**/*.spec.ts
+test/
+coverage/
+reports/
+
+# docs
+README.md
+docs/
+
+
+# local changes
+/local
+

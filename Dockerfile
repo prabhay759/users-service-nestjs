@@ -1,14 +1,17 @@
-FROM node:12-alpine
+FROM node:12-alpine AS base
 
+RUN mkdir -p /app
 WORKDIR /app
 
-COPY node_modules ./node_modules
-COPY dist ./dist
 COPY package.json package-lock.json ./
+RUN npm install --only=prod
 
-ENV NODE_ENV=production
-RUN npm rebuild
+FROM base AS build
+RUN npm install
+COPY . .
+RUN npm run build
 
-ENV PORT=80
+FROM base AS release
+COPY --from=build /app/dist/ ./dist
 EXPOSE 80
-CMD ["npm", "run", "start:prod"]
+CMD [ "npm",  "run", "start:prod" ]
