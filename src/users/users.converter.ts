@@ -1,7 +1,7 @@
 import * as _ from "lodash";
 import { Ids } from "../common/ids.generator";
 import { Injectable } from "@nestjs/common";
-import { User, UsersCreate, UsersUpdate } from "./api/users.interface";
+import { User, UsersAddress, UsersCreate, UsersUpdate } from "./api/users.interface";
 import { UsersEntity } from "./model/users.entity";
 
 @Injectable()
@@ -12,26 +12,24 @@ export class UsersConverter {
       email: entity.email,
       password: entity.password,
       first_name: entity.first_name,
-      addressLine1: entity.address.addressLine1,
-      addressLine2: entity.address.addressLine2 || "",
+      region: entity.address.region,
       city: entity.address.city,
       country: entity.address.country,
-      postCode: entity.address.postCode,
+      postal: entity.address.postal,
     });
   }
 
-  createToDomain(dto: UsersCreate): UsersEntity {
+  createToDomain(dto: UsersCreate, address: UsersAddress): UsersEntity {
     return UsersEntity.of({
       id: Ids.genUuid(),
       email: dto.email,
       first_name: dto.first_name,
       password: dto.password,
       address: {
-        addressLine1: dto.addressLine1,
-        addressLine2: dto.addressLine2 || "",
-        city: dto.city,
-        country: dto.country,
-        postCode: dto.postCode,
+        region: address.region,
+        city: address.city,
+        country: address.country,
+        postal: address.postal,
       },
     });
   }
@@ -42,29 +40,32 @@ export class UsersConverter {
       email: dto.email || "",
       first_name: dto.first_name || "",
       password: dto.password || "",
-      address: {
-        addressLine1: dto.addressLine1 || "",
-        addressLine2: dto.addressLine2 || "",
-        city: dto.city || "",
-        country: dto.country || "",
-        postCode: dto.postCode || "",
-      },
     });
   }
 
-  replaceToDomain(userId: string, dto: UsersUpdate): UsersEntity {
+  replaceToDomain(userId: string, dto: UsersUpdate, address: UsersAddress): UsersEntity {
     return UsersEntity.of({
       id: userId,
       email: dto.email,
       first_name: dto.first_name,
       password: dto.password,
       address: {
-        addressLine1: dto.addressLine1,
-        addressLine2: dto.addressLine2 || "",
-        city: dto.city,
-        country: dto.country,
-        postCode: dto.postCode,
+        region: address.region,
+        city: address.city,
+        country: address.country,
+        postal: address.postal,
       },
     });
+  }
+
+  // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+  toAddress(address: any): UsersAddress {
+    const userAddress = new UsersAddress();
+    userAddress.city = address.city;
+    userAddress.region = address.region;
+    userAddress.postal = address.postal;
+    userAddress.country = address.country_name;
+
+    return userAddress;
   }
 }

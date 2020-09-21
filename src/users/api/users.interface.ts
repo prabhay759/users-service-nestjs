@@ -2,24 +2,18 @@ import * as _ from "lodash";
 import { Allow, IsEmail, IsOptional, IsString } from "class-validator";
 import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
 
-export class Address {
-  @Allow()
-  @ApiProperty({
-    example: "Haupstrasse 46",
-  })
-  addressLine1: string;
-
+export class UsersAddress {
   @Allow()
   @ApiPropertyOptional({
-    example: "Apartmen No 5",
+    example: "Lucerne",
   })
-  addressLine2?: string;
+  region: string;
 
   @Allow()
   @ApiProperty({
     example: "6020",
   })
-  postCode: string;
+  postal: string;
 
   @Allow()
   @ApiProperty({
@@ -34,7 +28,7 @@ export class Address {
   country: string;
 }
 
-export class User extends Address {
+export class User extends UsersAddress {
   @Allow()
   @ApiProperty({ example: "dd869563-6819-496f-9400-02bb5c2b7c14" })
   id: string;
@@ -58,7 +52,7 @@ export class User extends Address {
   }
 }
 
-export class UsersCreate extends Address {
+export class UsersCreate {
   @Allow()
   @ApiProperty()
   @IsEmail()
@@ -104,36 +98,6 @@ export class UsersUpdate {
     example: "Prabhay",
   })
   first_name?: string;
-
-  @Allow()
-  @ApiProperty({
-    example: "Haupstrasse 46",
-  })
-  addressLine1?: string;
-
-  @Allow()
-  @ApiPropertyOptional({
-    example: "Apartmen No 5",
-  })
-  addressLine2?: string;
-
-  @Allow()
-  @ApiProperty({
-    example: "6020",
-  })
-  postCode?: string;
-
-  @Allow()
-  @ApiProperty({
-    example: "Luzern",
-  })
-  city?: string;
-
-  @Allow()
-  @ApiProperty({
-    example: "switzerland",
-  })
-  country?: string;
 
   static of(data: UsersUpdate): UsersUpdate {
     const result = new UsersUpdate();

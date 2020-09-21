@@ -8,7 +8,10 @@ export function translateDatabaseException(
 ): Error | BadRequestException | QueryFailedError {
   if (e instanceof QueryFailedError) {
     if (e.message.includes("violates unique constraint")) {
-      return new TaggedBadRequestException("Unique constraint violation", ValidationTag.unique_constraint_violation);
+      return new TaggedBadRequestException(
+        "Email Unique constraint violation",
+        ValidationTag.unique_constraint_violation,
+      );
     }
   }
   return e;

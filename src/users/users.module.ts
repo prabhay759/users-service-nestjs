@@ -2,8 +2,6 @@ import { ConfigModule } from "@nestjs/config";
 import { DatabaseModule } from "../database/database.module";
 import { Module } from "@nestjs/common";
 import { SnsModule } from "src/sns/sns.module";
-import { SnsService } from "src/sns/sns.service";
-import { Transactional } from "src/database/transactional";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { UsersController } from "./users.controller";
 import { UsersConverter } from "./users.converter";
@@ -19,9 +17,10 @@ import { UsersService } from "./users.service";
     SnsModule.forRootSnsAsync({
       useFactory: async () => {
         return {
-          accessKeyId: "",
-          secretAccessKey: "",
+          accessKeyId: "AKIAIOSFODNN7EXAMPLE",
+          secretAccessKey: "wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY",
           region: "eu-west-2",
+          endPoint: process.env.SNS_HOST,
         };
       },
       inject: [],

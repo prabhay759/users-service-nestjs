@@ -17,7 +17,7 @@ export class UsersEntity {
   password: string;
 
   @Column({ type: "jsonb" })
-  address: any;
+  address?: any;
 
   static of(data: UsersEntity): UsersEntity {
     const result = new UsersEntity();
